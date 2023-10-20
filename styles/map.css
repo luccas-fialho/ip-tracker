@@ -1,0 +1,7 @@
+.map_container {
+  height: 60dvh;
+}
+
+#map { 
+  height: 100%; 
+}
