@@ -23,11 +23,18 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 submitBtn.addEventListener("click", () => {
   showModal();
+  console.log(isIpNumber(input.value));
 });
 
 async function getApiData() {
-  const ipAddress = input.value || "";
-  url = `https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}&ipAddress=${ipAddress}`;
+  const inputValue = input.value || "";
+
+  if(isIpNumber(inputValue) || inputValue == '') {
+    url = `https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}&ipAddress=${inputValue}`;
+  } else {
+    url = `https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}&domain=${inputValue}`;
+  }
+  
   const response = await fetch(url);
   const data = await response.json();
   return data;
@@ -57,6 +64,11 @@ async function showModal() {
 
   map.setView([lat, long], 17);
   let marker = L.marker([lat, long]).addTo(map);
+}
+
+function isIpNumber(input) {
+  let regex = /\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\b/i;
+  return regex.test(input);
 }
 
 showModal();
